@@ -1,4 +1,3 @@
-how to use static lib and shared lib ?
 Build everything by this command:
 ```bash
 make all
