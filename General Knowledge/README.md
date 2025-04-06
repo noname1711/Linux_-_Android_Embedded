@@ -13,5 +13,5 @@ bin/use-shared-library
 Both of them, this program can help you to calculate the sqrt of a number (double).
 After all action, you should be clean that:
 ```bash
-make/clean
+make clean
 ```
