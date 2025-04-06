@@ -38,7 +38,7 @@ create_shared: create_obj
 
 link_static: create_static
 	$(CC) $(MAIN_OBJ) $(STATIC_LIB) -o $(TARGET_STATIC) -lm
-
+	
 link_shared: create_shared
 	$(CC) $(MAIN_OBJ) -L$(LIB_SHARED_DIR) -Wl,-rpath,$(LIB_SHARED_DIR) -lmysqrt -o $(TARGET_SHARED) -lm
 
