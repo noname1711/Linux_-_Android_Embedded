@@ -42,7 +42,8 @@ and we can check it by command:
 ```bash
 ps -ef | grep myapp
 ```
-change myapp by your name, see pts/0, it mean success. But we only check this in 10s after child process sleeping
+change myapp by your name, see pts/0, it mean success. But we only check this in 10s after child process sleeping.
+
 After both of them, should be clean that:
 ```bash
 make clean
