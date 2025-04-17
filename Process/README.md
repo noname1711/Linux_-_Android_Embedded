@@ -12,7 +12,8 @@ or change to "date", command:
 ```bash
 make allhw2-2
 ```
-when using exec family, we change the present process to new process (in this program, using execvp)
+when using exec family, we change the present process to new process (in this program, using execvp).
+
 Hw3:
 Create 2 process: child and parent. Parent process will send signal SIGUSR1 to child process, I define my signal is "Child process get SIGUSR1 signal + id":
 ```bash
