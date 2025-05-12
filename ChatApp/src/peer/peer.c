@@ -16,18 +16,18 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    int port = atoi(argv[1]);
-    int listener = setup_listener_socket(port);
+    int port = atoi(argv[1]); 
+    int listener = setup_listener_socket(port); 
     if (listener < 0) return 1;
 
-    show_menu();
+    show_menu(); 
     log_info("Listening on port %d", port);
 
-    fd_set master, read_fds;
-    int fdmax = listener;
+    fd_set master, read_fds; 
+    int fdmax = listener;    
     FD_ZERO(&master);
-    FD_SET(STDIN_FILENO, &master);
-    FD_SET(listener, &master);
+    FD_SET(STDIN_FILENO, &master); 
+    FD_SET(listener, &master);    
 
     char command[1024];
 
@@ -35,20 +35,20 @@ int main(int argc, char* argv[]) {
         printf("---> ");
         fflush(stdout); 
 
-        read_fds = master;
+        read_fds = master; 
         if (select(fdmax + 1, &read_fds, NULL, NULL, NULL) == -1) {
             perror("select");
             exit(1);
         }
 
         for (int i = 0; i <= fdmax; ++i) {
-            if (FD_ISSET(i, &read_fds)) {
-                if (i == STDIN_FILENO) {
+            if (FD_ISSET(i, &read_fds)) { 
+                if (i == STDIN_FILENO) { 
                     if (fgets(command, sizeof(command), stdin) == NULL) {
                         printf("\n");
                         continue;
                     }
-                    command[strcspn(command, "\n")] = 0;
+                    command[strcspn(command, "\n")] = 0; 
 
                     if (strncmp(command, "help", 4) == 0) {
                         show_help();
@@ -65,7 +65,12 @@ int main(int argc, char* argv[]) {
                                 addr.sin_family = AF_INET;
                                 addr.sin_port = htons(cport);
                                 inet_pton(AF_INET, ip, &addr.sin_addr);
-                                add_connection(peer_sock, addr);
+
+                                char listen_port_str[10];
+                                snprintf(listen_port_str, sizeof(listen_port_str), "%d", port);
+                                send(peer_sock, listen_port_str, strlen(listen_port_str), 0);
+
+                                add_connection(peer_sock, addr, cport);
                                 FD_SET(peer_sock, &master);
                                 if (peer_sock > fdmax) fdmax = peer_sock;
                                 log_info("Connected to %s:%d", ip, cport);
@@ -107,20 +112,31 @@ int main(int argc, char* argv[]) {
                     } else {
                         printf("Unknown command. Type 'help' for a list of commands.\n");
                     }
-                } else if (i == listener) {
+                } else if (i == listener) { 
                     struct sockaddr_in remote;
                     socklen_t len = sizeof(remote);
                     int newfd = accept(listener, (struct sockaddr*)&remote, &len);
                     if (newfd >= 0) {
-                        add_connection(newfd, remote);
-                        FD_SET(newfd, &master);
-                        if (newfd > fdmax) fdmax = newfd;
-                        log_info("New peer connected from %s:%d",
-                                 inet_ntoa(remote.sin_addr), ntohs(remote.sin_port));
+                        
+                        char buffer[1024];
+                        int bytes_received = recv(newfd, buffer, sizeof(buffer) - 1, 0);
+                        if (bytes_received > 0) {
+                            buffer[bytes_received] = '\0';
+                            int peer_listen_port = atoi(buffer); 
+
+                            add_connection(newfd, remote, peer_listen_port);
+                            FD_SET(newfd, &master);
+                            if (newfd > fdmax) fdmax = newfd;
+                            log_info("New peer connected from %s:%d (listening on port %d)",
+                                     inet_ntoa(remote.sin_addr), ntohs(remote.sin_port), peer_listen_port);
+                        } else {
+                            log_error("Failed to receive listening port from peer");
+                            close(newfd);
+                        }
                     } else {
                         perror("accept");
                     }
-                } else {
+                } else { 
                     char buffer[1024];
                     int len = recv(i, buffer, sizeof(buffer) - 1, 0);
                 
