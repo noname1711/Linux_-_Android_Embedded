@@ -1,4 +1,4 @@
-.PHONY: all clean setup run
+.PHONY: all clean setup run check-mem
 
 # Directories
 CUR_DIR := .
@@ -11,7 +11,7 @@ BIN_DIR := $(CUR_DIR)/bin
 
 # Compiler
 CC := gcc
-CFLAGS := -Wall -Wextra -I$(INC_DIR)
+CFLAGS := -g -Wall -Wextra -I$(INC_DIR)
 
 # File Lists
 LIB_SRCS := $(wildcard $(LIB_DIR)/*.c)
@@ -54,3 +54,14 @@ run: all
 		echo "Running peer on port $(PORT)..."; \
 		$(TARGET) $(PORT); \
 	fi
+
+# Check for memory leaks using Valgrind
+check-mem: all
+	@if [ -z "$(PORT)" ]; then \
+		echo "Please provide a port, example: make check-mem PORT=8080"; \
+	else \
+		echo "Checking memory leaks for peer on port $(PORT) with Valgrind..."; \
+		valgrind --leak-check=full --show-leak-kinds=all $(TARGET) $(PORT); \
+	fi
+
+	

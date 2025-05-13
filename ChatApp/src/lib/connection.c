@@ -1,4 +1,5 @@
 #include "connection.h"
+#include "myLog.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -7,23 +8,39 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 
-#define MAX_CONN 10 
 
-static PeerInfo connections[MAX_CONN];
-static int conn_count = 0;  
-static int next_id = 1;     
+Connection connections[MAX_CONNECTIONS];
+int conn_count = 0;    
 
 void add_connection(int socket_fd, struct sockaddr_in addr, int listening_port) {
-    if (conn_count < MAX_CONN) {
-        connections[conn_count].id = next_id++;
-        connections[conn_count].socket_fd = socket_fd;
-        connections[conn_count].addr = addr;
-        connections[conn_count].listening_port = listening_port;
-        conn_count++;
-    } else {
-        fprintf(stderr, "Maximum connections reached. Cannot add new connection.\n");
+    if (conn_count >= MAX_CONNECTIONS) {
+        log_error("Connection limit reached");
+        return;
     }
+
+    int new_id = 1;
+    while (1) {
+        int id_exists = 0;
+        for (int i = 0; i < conn_count; i++) {
+            if (connections[i].id == new_id) {
+                id_exists = 1;
+                break;
+            }
+        }
+        if (!id_exists) break;
+        new_id++;
+    }
+
+    connections[conn_count].socket_fd = socket_fd;
+    connections[conn_count].addr = addr;
+    connections[conn_count].listening_port = listening_port;
+    connections[conn_count].id = new_id;
+    
+    conn_count++;
+    
+    log_info("Added new connection ID %d", new_id);
 }
+
 
 int get_peer_listen_port(int socket_fd) {
     for (int i = 0; i < conn_count; i++) {
@@ -35,16 +52,18 @@ int get_peer_listen_port(int socket_fd) {
 }
 
 void remove_connection(int id) {
-    for (int i = 0; i < conn_count; ++i) {
+    for (int i = 0; i < conn_count; i++) {
         if (connections[i].id == id) {
-            for (int j = i; j < conn_count - 1; ++j) {
+            // Dịch chuyển các phần tử phía sau lên
+            for (int j = i; j < conn_count - 1; j++) {
                 connections[j] = connections[j + 1];
             }
             conn_count--;
+            log_info("Removed connection ID %d", id);
             return;
         }
     }
-    fprintf(stderr, "Connection with ID %d not found.\n", id);
+    log_error("Connection ID %d not found", id);
 }
 
 void list_connections() {
@@ -83,4 +102,13 @@ void cleanup_connections() {
         close(connections[i].socket_fd); 
     }
     conn_count = 0; 
+}
+
+int get_connection_index_by_id(int id) {
+    for (int i = 0; i < conn_count; i++) {
+        if (connections[i].id == id) {
+            return i;
+        }
+    }
+    return -1;
 }

@@ -52,13 +52,41 @@ int main(int argc, char* argv[]) {
 
                     if (strncmp(command, "help", 4) == 0) {
                         show_help();
-                    } else if (strncmp(command, "myip", 4) == 0) {
+                    } 
+                    
+                    else if (strncmp(command, "myip", 4) == 0) {
                         printf("Your IP: %s\n", get_my_ip());
-                    } else if (strncmp(command, "myport", 6) == 0) {
+                    } 
+                    
+                    else if (strncmp(command, "myport", 6) == 0) {
                         printf("Your port: %d\n", port);
-                    } else if (strncmp(command, "connect", 7) == 0) {
-                        char ip[100]; int cport;
+                    } 
+                    
+                    else if (strncmp(command, "connect", 7) == 0) {
+                        char ip[INET_ADDRSTRLEN];
+                        int cport;
                         if (sscanf(command, "connect %s %d", ip, &cport) == 2) {
+
+                            if (strcmp(ip, get_my_ip()) == 0 && cport == port) {
+                                log_error("You cannot connect to yourself (%s:%d)", ip, cport);
+                                continue; 
+                            }
+
+                            int duplicate_found = 0;
+                            for (int i = 0; i < conn_count; ++i) {
+                                char existing_ip[INET_ADDRSTRLEN];
+                                inet_ntop(AF_INET, &(connections[i].addr.sin_addr), existing_ip, sizeof(existing_ip));
+                                if (strcmp(ip, existing_ip) == 0 && cport == connections[i].listening_port) {
+                                    log_error("Connection to %s:%d already exists", ip, cport);
+                                    duplicate_found = 1; 
+                                    break; 
+                                }
+                            }
+
+                            if (duplicate_found) {
+                                continue; 
+                            }
+
                             int peer_sock = create_connection(ip, cport);
                             if (peer_sock > 0) {
                                 struct sockaddr_in addr;
@@ -69,49 +97,94 @@ int main(int argc, char* argv[]) {
                                 char listen_port_str[10];
                                 snprintf(listen_port_str, sizeof(listen_port_str), "%d", port);
                                 send(peer_sock, listen_port_str, strlen(listen_port_str), 0);
-
+                    
                                 add_connection(peer_sock, addr, cport);
                                 FD_SET(peer_sock, &master);
                                 if (peer_sock > fdmax) fdmax = peer_sock;
+                    
                                 log_info("Connected to %s:%d", ip, cport);
                             } else {
-                                log_error("Failed to connect");
+                                log_error("Failed to connect to %s:%d", ip, cport);
                             }
                         } else {
-                            printf("Usage: connect <IP> <port>\n");
+                            log_error("Usage: connect <IP> <port>");
                         }
-                    } else if (strncmp(command, "list", 4) == 0) {
+                    } 
+                    
+                    else if (strncmp(command, "list", 4) == 0) {
                         list_connections();
-                    } else if (strncmp(command, "terminate", 9) == 0) {
+                    } 
+                    
+                    else if (strncmp(command, "terminate", 9) == 0) {
                         int id;
                         if (sscanf(command, "terminate %d", &id) == 1) {
-                            int s = get_socket_by_id(id);
-                            if (s > 0) {
-                                close(s);
-                                FD_CLR(s, &master);
-                                remove_connection(id);
-                                log_info("Connection %d terminated", id);
+                            int index = -1;
+                            char ip[INET_ADDRSTRLEN];
+                            int peer_port = 0;
+                            
+                            // Tìm kết nối và lấy thông tin
+                            for (int i = 0; i < conn_count; ++i) {
+                                if (connections[i].id == id) {
+                                    index = i;
+                                    inet_ntop(AF_INET, &(connections[i].addr.sin_addr), ip, sizeof(ip));
+                                    peer_port = connections[i].listening_port;
+                                    break;
+                                }
+                            }
+                            
+                            if (index != -1) {
+                                // Đóng kết nối và xóa khỏi danh sách
+                                close(connections[index].socket_fd);
+                                FD_CLR(connections[index].socket_fd, &master);
+                                
+                                // Dịch chuyển các kết nối phía sau lên
+                                for (int j = index; j < conn_count - 1; ++j) {
+                                    connections[j] = connections[j + 1];
+                                }
+                                conn_count--;
+                                
+                                log_info("Connection %d with %s:%d terminated", id, ip, peer_port);
                             } else {
-                                log_error("Invalid connection ID");
+                                log_error("Connection with ID %d not found", id);
                             }
                         } else {
-                            printf("Usage: terminate <id>\n");
+                            log_error("Usage: terminate <id>");
                         }
-                    } else if (strncmp(command, "send", 4) == 0) {
+                    }
+                    
+                    else if (strncmp(command, "send", 4) == 0) {
                         int id;
                         char msg[1000];
                         if (sscanf(command, "send %d %[^\n]", &id, msg) == 2) {
-                            send_message(id, msg);
+                            send_message(id, msg); 
                         } else {
                             printf("Usage: send <id> <message>\n");
                         }
-                    } else if (strncmp(command, "exit", 4) == 0) {
+                    } 
+                    
+                    else if (strncmp(command, "exit", 4) == 0) {
+                        // Đóng tất cả kết nối với các peer khác trước khi thoát
+                        for (int i = 0; i <= fdmax; i++) {
+                            if (FD_ISSET(i, &master) && i != STDIN_FILENO && i != listener) {
+                                close(i);
+                                FD_CLR(i, &master);
+                                
+                                // Gửi thông báo ngắt kết nối (nếu cần)
+                                char exit_msg[] = "EXIT";
+                                send(i, exit_msg, sizeof(exit_msg), 0);
+                            }
+                        }
+                        
+                        // Đóng socket lắng nghe
+                        if (listener != -1) {
+                            close(listener);
+                            FD_CLR(listener, &master);
+                        }
+                        
                         cleanup_connections();
                         log_info("Exiting...");
                         exit(0);
-                    } else {
-                        printf("Unknown command. Type 'help' for a list of commands.\n");
-                    }
+                    } 
                 } else if (i == listener) { 
                     struct sockaddr_in remote;
                     socklen_t len = sizeof(remote);
@@ -128,7 +201,7 @@ int main(int argc, char* argv[]) {
                             FD_SET(newfd, &master);
                             if (newfd > fdmax) fdmax = newfd;
                             log_info("New peer connected from %s:%d (listening on port %d)",
-                                     inet_ntoa(remote.sin_addr), ntohs(remote.sin_port), peer_listen_port);
+                                    inet_ntoa(remote.sin_addr), ntohs(remote.sin_port), peer_listen_port);
                         } else {
                             log_error("Failed to receive listening port from peer");
                             close(newfd);
@@ -137,24 +210,31 @@ int main(int argc, char* argv[]) {
                         perror("accept");
                     }
                 } else { 
-                    char buffer[1024];
-                    int len = recv(i, buffer, sizeof(buffer) - 1, 0);
-                
-                    if (len <= 0) {
-                        if (len == 0) {
-                            log_info("Peer disconnected (socket %d)", i);
-                        } else {
-                            log_error("recv() error on socket %d", i);
-                        }
-                
+                    char message_buffer[1024];
+                    RecvStatus status = receive_message(i, message_buffer, sizeof(message_buffer));
+
+                    if (status == RECV_DISCONNECT || status == RECV_EXIT) {
                         int id = get_id_by_socket(i);
-                        if (id >= 0) remove_connection(id);
+                        if (id != -1) {
+                            char ip[INET_ADDRSTRLEN];
+                            struct sockaddr_in addr = connections[get_connection_index_by_id(id)].addr;
+                            inet_ntop(AF_INET, &addr.sin_addr, ip, sizeof(ip));
+                            
+                            log_info("Peer %s:%d disconnected", 
+                                    ip, 
+                                    connections[get_connection_index_by_id(id)].listening_port);
+                            
+                            remove_connection(id);
+                        }
                         close(i);
                         FD_CLR(i, &master);
-                    } else {
-                        buffer[len] = '\0';
-                        log_info("Message from ID %d: %s", get_id_by_socket(i), buffer);
-                    }
+                        
+                        // Cập nhật fdmax nếu cần
+                        if (i == fdmax) {
+                            while (fdmax > 0 && !FD_ISSET(fdmax, &master))
+                                fdmax--;
+                        }
+                    } 
                 }
             }
         }

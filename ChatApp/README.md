@@ -27,3 +27,16 @@ Chat Application/
 |-- Makefile
 |-- README.md
 ```
+những vấn đề cần giải quyết:
+7. send <connection id> <message>: Send a message to a peer
+Mục tiêu:
+Gửi tin nhắn văn bản đến một kết nối cụ thể.
+
+Các yêu cầu:
+Tin nhắn không quá 100 ký tự.
+Hiển thị thông báo thành công khi gửi tin nhắn.
+Khi nhận tin nhắn:
+Hiển thị IP và cổng của người gửi.
+Hiển thị nội dung tin nhắn.
+
+
