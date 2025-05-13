@@ -1,4 +1,4 @@
-The structure of project:
+The structure of project 1:
 ```text
 Chat Application/
 |
