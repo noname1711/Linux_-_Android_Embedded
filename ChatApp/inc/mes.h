@@ -2,13 +2,12 @@
 #define MES_H
 
 typedef enum {
-    RECV_OK,          // Nhận tin nhắn thành công
-    RECV_DISCONNECT,  // Peer ngắt kết nối
-    RECV_EXIT         // Peer gửi lệnh EXIT
+    RECV_OK,          // Received a message successfully
+    RECV_DISCONNECT,  // Peer disconnected
+    RECV_EXIT         // Peer send EXIT
 } RecvStatus;
 
 RecvStatus receive_message(int sender_fd, char* output_buffer, int buffer_size);
 void send_message(int connection_id, const char* message);
-//void receive_message(int sender_fd);
 
 #endif

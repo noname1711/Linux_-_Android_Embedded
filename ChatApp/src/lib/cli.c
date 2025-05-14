@@ -1,5 +1,5 @@
-#include <stdio.h>
 #include "cli.h"
+#include <stdio.h>
 
 void show_help() {
     printf("================================================\n");
@@ -13,9 +13,11 @@ void show_help() {
     printf("send <id> <message> - Send message to peer\n");
     printf("exit                - Exit the application\n");
     printf("================================================\n");
+    fflush(stdout);   //ensure the message is printed immediately, help clear cache early
 }
 
 void show_menu() {
     printf("================ Chat Application =================\n");
     printf("Type a command (type 'help' for a list of commands):\n");
+    fflush(stdout);
 }

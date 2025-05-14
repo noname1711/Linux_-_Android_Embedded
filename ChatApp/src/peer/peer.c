@@ -66,12 +66,10 @@ int main(int argc, char* argv[]) {
                         char ip[INET_ADDRSTRLEN];
                         int cport;
                         if (sscanf(command, "connect %s %d", ip, &cport) == 2) {
-
                             if (strcmp(ip, get_my_ip()) == 0 && cport == port) {
                                 log_error("You cannot connect to yourself (%s:%d)", ip, cport);
                                 continue; 
                             }
-
                             int duplicate_found = 0;
                             for (int i = 0; i < conn_count; ++i) {
                                 char existing_ip[INET_ADDRSTRLEN];
@@ -82,26 +80,21 @@ int main(int argc, char* argv[]) {
                                     break; 
                                 }
                             }
-
                             if (duplicate_found) {
                                 continue; 
                             }
-
                             int peer_sock = create_connection(ip, cport);
                             if (peer_sock > 0) {
                                 struct sockaddr_in addr;
                                 addr.sin_family = AF_INET;
                                 addr.sin_port = htons(cport);
                                 inet_pton(AF_INET, ip, &addr.sin_addr);
-
                                 char listen_port_str[10];
                                 snprintf(listen_port_str, sizeof(listen_port_str), "%d", port);
                                 send(peer_sock, listen_port_str, strlen(listen_port_str), 0);
-                    
                                 add_connection(peer_sock, addr, cport);
                                 FD_SET(peer_sock, &master);
                                 if (peer_sock > fdmax) fdmax = peer_sock;
-                    
                                 log_info("Connected to %s:%d", ip, cport);
                             } else {
                                 log_error("Failed to connect to %s:%d", ip, cport);
@@ -121,8 +114,6 @@ int main(int argc, char* argv[]) {
                             int index = -1;
                             char ip[INET_ADDRSTRLEN];
                             int peer_port = 0;
-                            
-                            // Tìm kết nối và lấy thông tin
                             for (int i = 0; i < conn_count; ++i) {
                                 if (connections[i].id == id) {
                                     index = i;
@@ -131,18 +122,13 @@ int main(int argc, char* argv[]) {
                                     break;
                                 }
                             }
-                            
                             if (index != -1) {
-                                // Đóng kết nối và xóa khỏi danh sách
                                 close(connections[index].socket_fd);
                                 FD_CLR(connections[index].socket_fd, &master);
-                                
-                                // Dịch chuyển các kết nối phía sau lên
                                 for (int j = index; j < conn_count - 1; ++j) {
                                     connections[j] = connections[j + 1];
                                 }
                                 conn_count--;
-                                
                                 log_info("Connection %d with %s:%d terminated", id, ip, peer_port);
                             } else {
                                 log_error("Connection with ID %d not found", id);
@@ -163,29 +149,25 @@ int main(int argc, char* argv[]) {
                     } 
                     
                     else if (strncmp(command, "exit", 4) == 0) {
-                        // Đóng tất cả kết nối với các peer khác trước khi thoát
                         for (int i = 0; i <= fdmax; i++) {
                             if (FD_ISSET(i, &master) && i != STDIN_FILENO && i != listener) {
                                 close(i);
                                 FD_CLR(i, &master);
-                                
-                                // Gửi thông báo ngắt kết nối (nếu cần)
                                 char exit_msg[] = "EXIT";
                                 send(i, exit_msg, sizeof(exit_msg), 0);
                             }
                         }
-                        
-                        // Đóng socket lắng nghe
                         if (listener != -1) {
                             close(listener);
                             FD_CLR(listener, &master);
                         }
-                        
                         cleanup_connections();
                         log_info("Exiting...");
                         exit(0);
                     } 
-                } else if (i == listener) { 
+                } 
+                
+                else if (i == listener) { 
                     struct sockaddr_in remote;
                     socklen_t len = sizeof(remote);
                     int newfd = accept(listener, (struct sockaddr*)&remote, &len);
@@ -196,7 +178,6 @@ int main(int argc, char* argv[]) {
                         if (bytes_received > 0) {
                             buffer[bytes_received] = '\0';
                             int peer_listen_port = atoi(buffer); 
-
                             add_connection(newfd, remote, peer_listen_port);
                             FD_SET(newfd, &master);
                             if (newfd > fdmax) fdmax = newfd;
@@ -228,8 +209,6 @@ int main(int argc, char* argv[]) {
                         }
                         close(i);
                         FD_CLR(i, &master);
-                        
-                        // Cập nhật fdmax nếu cần
                         if (i == fdmax) {
                             while (fdmax > 0 && !FD_ISSET(fdmax, &master))
                                 fdmax--;

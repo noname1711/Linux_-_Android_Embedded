@@ -12,8 +12,8 @@ typedef struct {
     int id;
 } Connection;
 
-extern Connection connections[MAX_CONNECTIONS];
-extern int conn_count;
+extern Connection connections[MAX_CONNECTIONS];   //array of open-connections
+extern int conn_count;                            //number of open-connections    
 
 void add_connection(int socket_fd, struct sockaddr_in addr, int listening_port);
 int get_peer_listen_port(int socket_fd);
