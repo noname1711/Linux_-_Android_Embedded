@@ -3,6 +3,7 @@
 Makefile is a script that contains the flowing information:
 + Structure of a project (file, dependency)
 + Command lines are used to create and destroy file
+  
 The make program will read the contents of the Makefile and execute it.
 
 Makefile's structure (rules): 
