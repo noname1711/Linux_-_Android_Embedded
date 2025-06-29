@@ -1,3 +1,5 @@
+Create a character device file and an app in userspace. If the app writes "on" then the kernel will print the string "turn led on", if it writes "off" then the kernel will print the string "turn led off"
+
 command:
 ```bash
 make
