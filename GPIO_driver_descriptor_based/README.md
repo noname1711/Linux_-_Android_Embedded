@@ -1,8 +1,3 @@
-Convert .dts to .dtbo
-```bash
-dtc -@ -I dts -O dtb -o led-overlay.dtbo led_overlay.dts
-```
-
 
 In this folder
 ```bash
