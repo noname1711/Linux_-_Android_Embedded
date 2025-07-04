@@ -26,7 +26,8 @@ And insert node here
 ```dts
     led_test: led_test {
         compatible = "gpio-descriptor-based";
-        led27-gpios = <&gpio 27 GPIO_ACTIVE_HIGH>;
+        led27-gpios = <&gpio 27 0>;
+        status = "okay";
     };
 ```
 Build kernel again in YOCTO/poky/build
