@@ -30,7 +30,4 @@ And insert node here
         status = "okay";
     };
 ```
-Build kernel again in YOCTO/poky/build
-```bash
-bitbake virtual/kernel
-```
+Build kernel again 
