@@ -1,6 +1,5 @@
 Insert some tools to local.conf:
 ```bash
-RPI_EXTRA_CONFIG += "dtoverlay=my-i2c"
 IMAGE_INSTALL:append = " i2c-tools lcd1602-driver"
 PREFERRED_PROVIDER_virtual/kernel = "linux-raspberrypi"
 ```
