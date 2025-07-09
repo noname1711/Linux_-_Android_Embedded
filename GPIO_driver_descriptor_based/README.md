@@ -1,4 +1,22 @@
+Wiring diagram
+```text
++---------------------------+           +----------------------------+
+| Raspberry Pi Zero W      |           | LED + Resistor             |
+|---------------------------|           |----------------------------|
+| GPIO 27             ------- GPIO --->| Anode (+)                  |
+| GND                 ------- GND  --->| Cathode (-) via 330Ω       |
++---------------------------+           +----------------------------+
 
+                    ⬇️ UART DEBUG CONNECTION ⬇️
+
++---------------------------+           +----------------------------+
+| Raspberry Pi Zero W      |           | UART to USB Adapter (PC)   |
+|---------------------------|           |----------------------------|
+| GPIO 14 (UART TX) -------- UART TX -->| RXD                        |
+| GPIO 15 (UART RX) -------- UART RX <--| TXD                        |
+| GND                 ------- GND ----->| GND                        |
++---------------------------+           +----------------------------+
+```
 In this folder
 ```bash
 source /opt/poky/5.2/environment-setup-arm1176jzfshf-vfp-poky-linux-gnueabi
