@@ -47,7 +47,7 @@ sudo umount /dev/mmcblk0p1 2>/dev/null
 sudo umount /dev/mmcblk0p2 2>/dev/null
 sudo dd if=/dev/zero of=/dev/mmcblk0 bs=1M count=50 status=progress && sync
 ```
-Now flash agian
+Now flash again
 ```bash
 cd ~/YOCTO/poky/build/tmp/deploy/images/raspberrypi0-wifi/
 sudo dd if=core-image-base-raspberrypi0-wifi.rootfs.wic of=/dev/mmcblk0 bs=4M status=progress && sync
