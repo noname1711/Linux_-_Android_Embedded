@@ -1,3 +1,25 @@
+Wiring diagram
+```text
++---------------------------+            +-----------------------------+
+| Raspberry Pi Zero W      |            | LCD1602 Display (I2C)       |
+|---------------------------|            |-----------------------------|
+| GPIO 2  (I2C1_SDA) -------- I2C SDA -->| SDA                         |
+| GPIO 3  (I2C1_SCL) -------- I2C SCL -->| SCL                         |
+| GND                 -------- GND ----->| GND                         |
+| 3.3V or 5V          -------- VCC ----->| VCC                         |
++---------------------------+            +-----------------------------+
+
+                    ⬇️ UART DEBUG CONNECTION ⬇️
+
++---------------------------+            +-----------------------------+
+| Raspberry Pi Zero W      |            | UART to USB Adapter (PC)    |
+|---------------------------|            |-----------------------------|
+| GPIO 14 (UART TX) -------- UART TX --->| RXD                         |
+| GPIO 15 (UART RX) -------- UART RX <---| TXD                         |
+| GND                 ------- GND -----> | GND                         |
++---------------------------+            +-----------------------------+
+```
+
 Insert some tools to local.conf:
 ```bash
 IMAGE_INSTALL:append = " i2c-tools lcd1602-driver"
