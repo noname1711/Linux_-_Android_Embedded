@@ -80,7 +80,7 @@ Login by root and insmod lcd1602_driver.ko
 ```bash
 insmod lcd1602_driver.ko
 ```
-If the program don't run (lcd don't print "Hello world"), assign device to driver, lcd1602 using address is 0x27, and bus is i2c-1
+If the program don't run (lcd don't print "Hello world"), assign device to driver, lcd1602 using address is 0x27, and bus is i2c-1. Attach an I2C slave with address 0x27, its name is lcd1602, mount it on the i2c-1 bus, and create a device
 ```bash
 echo lcd1602 0x27 > /sys/bus/i2c/devices/i2c-1/new_device
 ```
