@@ -3,6 +3,7 @@
 
 #include <linux/types.h>
 
+// image data frame 0, 1, 2,.. 15 convert to byte array
 static const u16 frame_0[] = {
     0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
     0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -41011,6 +41012,7 @@ static const u16 frame_15[] = {
     0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
 };
 
+// 16 frames of animation data
 static const u16* const animation_frames[16] = {
     frame_0,
     frame_1,
