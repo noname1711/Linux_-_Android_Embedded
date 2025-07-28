@@ -23,9 +23,7 @@ SPI signals:
 + SS: Slave Select (Master Output)
 + CSn, EN, ENB
 
-SPI modes: 
-
-Modes are composed of two clock characteristics:
+SPI modes: Modes are composed of two clock characteristics:
 
 + CPOL - Clock polarity
     + 0 = Clock idle state low
