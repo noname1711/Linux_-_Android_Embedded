@@ -24,7 +24,6 @@ SPI signals:
 + CSn, EN, ENB
 
 SPI modes: Modes are composed of two clock characteristics:
-
 + CPOL - Clock polarity
     + 0 = Clock idle state low
     + 1 = Clock idle state high
