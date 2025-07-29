@@ -11,12 +11,12 @@ Can be called by other names such as IIC, TWI, TWSI.
 ```text
           +------------------- I2C Bus -------------------+
           |                                               |
-      +--------+         SDA (Data Line)         +---------+
-      |        | <----------------------------> |         |
-      | Master |                                |  Slave  |
-      | (e.g., |         SCL (Clock Line)       | (Device |
-      |  CPU)  | <----------------------------> | Adapter)|
-      +--------+                                +---------+
+      +--------+         SDA (Data Line)        +----------+
+      |        | <----------------------------> |          |
+      | Master |                                |  Slave   |
+      | (e.g., |         SCL (Clock Line)       | (Device  |
+      |  CPU)  | <----------------------------> | Adapter) |
+      +--------+                                +----------+
 ```
 It is bus-master control communication (controlled by master) the device itself cannot receive or send but must go through the master.
 
