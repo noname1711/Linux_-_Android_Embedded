@@ -208,5 +208,5 @@ rmmod lcd1602_driver
 ```
 After all, we should be clean all
 ```bash
-make all
+make clean
 ```
