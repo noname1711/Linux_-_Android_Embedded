@@ -14,7 +14,7 @@ Can be called by other names such as IIC, TWI, TWSI.
       +--------+         SDA (Data Line)         +---------+
       |        | <----------------------------> |         |
       | Master |                                |  Slave  |
-      | (e.g., |         SCL (Clock Line)        | (Device|
+      | (e.g., |         SCL (Clock Line)       | (Device |
       |  CPU)  | <----------------------------> | Adapter)|
       +--------+                                +---------+
 ```
