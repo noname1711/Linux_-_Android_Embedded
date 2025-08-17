@@ -1,0 +1,42 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2835";
+
+    fragment@0 {
+        target = <&spi0>;
+        __overlay__ {
+            status = "okay";
+
+            /* --- LCD ILI9341 --- */
+            ili9341: ili9341@0 {
+                compatible = "ilitek,ili9341";
+                reg = <0>;                          // CE0 (GPIO8) → CS_LCD
+                spi-max-frequency = <32000000>;     // 32MHz SPI 
+                rotate = <90>;    
+                bgr;                                // swap RGB → BGR
+
+                dc-gpios = <&gpio 27 0>;            // GPIO27 → D/C
+                reset-gpios = <&gpio 22 0>;         // GPIO22 → RESET
+                led-gpios = <&gpio 17 0>;           // GPIO17 → LED backlight
+            };
+
+            /* --- Touchscreen XPT2046 --- */
+            xpt2046: touchscreen@1 {
+                compatible = "ti,tsc2046", "xpt2046";
+                reg = <1>;                          // CE1 (GPIO7) → CS_TOUCH
+                spi-max-frequency = <2000000>;      // 2MHz stable for touch screen
+
+                interrupt-parent = <&gpio>;
+                interrupts = <25 2>;                // GPIO25 → T_IRQ (IRQ), falling edge
+                pendown-gpio = <&gpio 25 0>;        //  pen down state
+
+                touchscreen-size-x = <240>;         // width
+                touchscreen-size-y = <320>;         // height
+                touchscreen-inverted-x = <0>;       
+                touchscreen-inverted-y = <1>;
+            };
+        };
+    };
+};

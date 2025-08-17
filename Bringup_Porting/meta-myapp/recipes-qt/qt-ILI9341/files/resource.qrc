@@ -1,0 +1,11 @@
+<RCC>
+  <qresource prefix="/">
+    <file>images/doraemon.png</file>
+    <file>images/doraemon_nobita.png</file>
+    <file>images/doraemon_eating.png</file>
+    <file>images/doraemon_scared.jpg</file>
+    <file>images/btn_nobita.jpg</file>
+    <file>images/btn_cake.png</file>
+    <file>images/btn_mourse.png</file>
+  </qresource>
+</RCC>

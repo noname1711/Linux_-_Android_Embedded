@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+  <class>MainWindow</class>
+  <widget class="QMainWindow" name="MainWindow">
+    <property name="geometry">
+      <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>320</width>
+        <height>240</height>
+      </rect>
+    </property>
+    <property name="windowTitle">
+      <string>MainWindow</string>
+    </property>
+    <widget class="QWidget" name="centralwidget">
+      <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="spacing">
+          <number>10</number>
+        </property>
+        <property name="margin">
+          <number>5</number>
+        </property>
+        <item alignment="Qt::AlignCenter">
+          <widget class="QLabel" name="label_doraemon">
+            <property name="minimumSize">
+              <size>
+                <width>150</width>
+                <height>100</height>
+              </size>
+            </property>
+            <property name="maximumSize">
+              <size>
+                <width>200</width>
+                <height>120</height>
+              </size>
+            </property>
+            <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+              </sizepolicy>
+            </property>
+            <property name="pixmap">
+              <pixmap resource="resource.qrc">:/images/doraemon.png</pixmap>
+            </property>
+            <property name="scaledContents">
+              <bool>true</bool>
+            </property>
+            <property name="alignment">
+              <set>Qt::AlignCenter</set>
+            </property>
+            <property name="styleSheet">
+              <string notr="true">QLabel {
+    padding: 2px;
+}</string>
+            </property>
+          </widget>
+        </item>
+        <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+            <property name="spacing">
+              <number>15</number>
+            </property>
+            <item>
+              <widget class="QPushButton" name="btn_cake">
+                <property name="minimumSize">
+                  <size>
+                    <width>50</width>
+                    <height>50</height>
+                  </size>
+                </property>
+                <property name="maximumSize">
+                  <size>
+                    <width>60</width>
+                    <height>60</height>
+                  </size>
+                </property>
+                <property name="styleSheet">
+                  <string notr="true">QPushButton {
+    border-radius: 25px;
+    border: 1px solid #8f8f91;
+    min-width: 50px;
+    max-width: 50px;
+    min-height: 50px;
+    max-height: 50px;
+    padding: 0px;
+    background-color: white;
+    qproperty-icon: url(:/images/btn_cake.png);
+    qproperty-iconSize: 40px 40px;
+    transition: all 0.2s ease-out;
+}
+QPushButton:hover {
+    min-width: 55px;
+    max-width: 55px;
+    min-height: 55px;
+    max-height: 55px;
+    border-radius: 27px;
+    border: 1px solid #0066ff;
+    qproperty-iconSize: 45px 45px;
+    box-shadow: 0px 2px 4px rgba(0, 102, 255, 0.3);
+}
+QPushButton:pressed {
+    background-color: #e0e0e0;
+    border: 1px solid #0044cc;
+}</string>
+                </property>
+                <property name="text">
+                  <string/>
+                </property>
+                <property name="icon">
+                  <iconset resource="resource.qrc">
+                    <normaloff>:/images/btn_cake.png</normaloff>:/images/btn_cake.png</iconset>
+                </property>
+              </widget>
+            </item>
+            <item>
+              <widget class="QPushButton" name="btn_mourse">
+                <property name="minimumSize">
+                  <size>
+                    <width>50</width>
+                    <height>50</height>
+                  </size>
+                </property>
+                <property name="maximumSize">
+                  <size>
+                    <width>60</width>
+                    <height>60</height>
+                  </size>
+                </property>
+                <property name="styleSheet">
+                  <string notr="true">QPushButton {
+    border-radius: 25px;
+    border: 1px solid #8f8f91;
+    min-width: 50px;
+    max-width: 50px;
+    min-height: 50px;
+    max-height: 50px;
+    padding: 0px;
+    background-color: white;
+    qproperty-icon: url(:/images/btn_mourse.png);
+    qproperty-iconSize: 40px 40px;
+    transition: all 0.2s ease-out;
+}
+QPushButton:hover {
+    min-width: 55px;
+    max-width: 55px;
+    min-height: 55px;
+    max-height: 55px;
+    border-radius: 27px;
+    border: 1px solid #ff6600;
+    qproperty-iconSize: 45px 45px;
+    box-shadow: 0px 2px 4px rgba(255, 102, 0, 0.3);
+}
+QPushButton:pressed {
+    background-color: #e0e0e0;
+    border: 1px solid #cc4400;
+}</string>
+                </property>
+                <property name="text">
+                  <string/>
+                </property>
+                <property name="icon">
+                  <iconset resource="resource.qrc">
+                    <normaloff>:/images/btn_mourse.png</normaloff>:/images/btn_mourse.png</iconset>
+                </property>
+              </widget>
+            </item>
+            <item>
+              <widget class="QPushButton" name="btn_nobita">
+                <property name="minimumSize">
+                  <size>
+                    <width>50</width>
+                    <height>50</height>
+                  </size>
+                </property>
+                <property name="maximumSize">
+                  <size>
+                    <width>60</width>
+                    <height>60</height>
+                  </size>
+                </property>
+                <property name="styleSheet">
+                  <string notr="true">QPushButton {
+    border-radius: 25px;
+    border: 1px solid #8f8f91;
+    min-width: 50px;
+    max-width: 50px;
+    min-height: 50px;
+    max-height: 50px;
+    padding: 0px;
+    background-color: white;
+    qproperty-icon: url(:/images/btn_nobita.jpg);
+    qproperty-iconSize: 40px 40px;
+    transition: all 0.2s ease-out;
+}
+QPushButton:hover {
+    min-width: 55px;
+    max-width: 55px;
+    min-height: 55px;
+    max-height: 55px;
+    border-radius: 27px;
+    border: 1px solid #00cc66;
+    qproperty-iconSize: 45px 45px;
+    box-shadow: 0px 2px 4px rgba(0, 204, 102, 0.3);
+}
+QPushButton:pressed {
+    background-color: #e0e0e0;
+    border: 1px solid #00aa44;
+}</string>
+                </property>
+                <property name="text">
+                  <string/>
+                </property>
+                <property name="icon">
+                  <iconset resource="resource.qrc">
+                    <normaloff>:/images/btn_nobita.jpg</normaloff>:/images/btn_nobita.jpg</iconset>
+                </property>
+              </widget>
+            </item>
+          </layout>
+        </item>
+      </layout>
+    </widget>
+    <widget class="QMenuBar" name="menubar">
+      <property name="geometry">
+        <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>320</width>
+          <height>20</height>
+        </rect>
+      </property>
+    </widget>
+    <widget class="QStatusBar" name="statusbar"/>
+  </widget>
+  <resources>
+    <include location="resource.qrc"/>
+  </resources>
+  <connections/>
+</ui>
